@@ -102,7 +102,7 @@ public class DummyControllerTest {
 		// 방법4
 		// 위의 내용을 람다식으로 작성 가능
 		User user = userRepository.findById(id).orElseThrow(()->{
-			return new IllegalArgumentException("해당사용자는 없습니다.");
+			return new IllegalArgumentException("해당 사용자는 없습니다.");
 		});
 
 		// User 객체는 자바 Object임, RestController를 사용하다보니 Data를 리턴하기에 Web브라우져는 오브젝트 이해르 못해서 변환이 필요
