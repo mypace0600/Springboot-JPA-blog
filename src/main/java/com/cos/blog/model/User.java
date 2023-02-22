@@ -32,13 +32,13 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // 프로젝트에서 연결된 DB 넘버링 전략을 따라간다.
 	private int id; // 시퀀스, auto-increment
 
-	@Column(nullable = false, length = 30)
+	@Column(nullable = false, length = 30, unique = true)
 	private String userName; // 아이디
 
 	@Column(nullable = false, length = 100) // hash 암호화 예정
 	private String password; // 비밀번호
 
-	@Column(nullable = false, length = 50)
+	@Column(nullable = false, length = 50, unique = true)
 	private String email; // 이메일
 
 
