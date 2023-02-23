@@ -15,16 +15,8 @@ public class UserApiService {
 	private UserRepository userRepository;
 
 	@Transactional
-	public int signIn(User user){
-		user.setRole(RoleType.USER);
-		try {
-			userRepository.save(user);
-			return 1;
-		} catch (Exception e){
-			e.printStackTrace();
-			System.out.println("UserApiService : signIn() :"+e.getMessage());
-		}
-		return -1;
+	public void signIn(User user){
+		userRepository.save(user);
 	}
 }
 
