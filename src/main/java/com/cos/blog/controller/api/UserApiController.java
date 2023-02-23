@@ -19,6 +19,9 @@ public class UserApiController {
 	@Autowired
 	private UserApiService service;
 
+	@Autowired
+	private HttpSession session;
+
 	@PostMapping("/api/user")
 	public ResponseDto<Integer> save(@RequestBody User user){
 		user.setRole(RoleType.USER);
@@ -26,8 +29,9 @@ public class UserApiController {
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
 
+	// 전통적 방식의 로그인 구현
 	@PostMapping("/api/user/login")
-	public ResponseDto<Integer> login(@RequestBody User user, HttpSession session){
+	public ResponseDto<Integer> login(@RequestBody User user){
 		User principal = service.signIn(user); // 접근 주체
 
 		if(principal != null){
