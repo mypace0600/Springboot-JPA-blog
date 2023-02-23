@@ -19,7 +19,7 @@ public class UserApiController {
 	@Autowired
 	private UserApiService service;
 
-	@PostMapping("/api/user")
+	@PostMapping("/auth/joinProc")
 	public ResponseDto<Integer> save(@RequestBody User user){
 		user.setRole(RoleType.USER);
 		service.signUp(user);
@@ -35,7 +35,6 @@ public class UserApiController {
 		}
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}*/
-
 
 
 }

@@ -3,9 +3,10 @@ let index = {
         $("#btn-save").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
             this.save();
         });
-        $("#btn-login").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
+        // 전통적 방식의 로그인 구현
+        /*$("#btn-login").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
             this.login();
-        });
+        });*/
     },
 
     save:function (){
@@ -23,7 +24,7 @@ let index = {
         // ajax default = async 비동기호출
         $.ajax({
             type:"POST",
-            url:"/api/user",
+            url:"/auth/joinProc",
             data:JSON.stringify(data), // javascript object인 data를 json 형식으로 변환해서 java가 인식할 수 있도록 준비함
             contentType:"application/json; charset=utf-8", // http body 데이터가 어떤 타입인지(MIME)
             dataType:"json" // 요청에 대한 응답이 왔을 때 기본적으로 문자열(생긴게 json이라면)=> javascript object로 변경해줌
@@ -34,9 +35,10 @@ let index = {
         }).fail(function (error){
             alert(JSON.stringify(error));
         });
-    },
+    }
 
-    login:function (){
+    // 전통적 방식의 로그인 구현
+    /*login:function (){
         let data = {
             userName: $("#username").val(),
             password: $("#password").val(),
@@ -54,7 +56,7 @@ let index = {
         }).fail(function (error){
             alert(JSON.stringify(error));
         });
-    }
+    }*/
 }
 
 index.init();

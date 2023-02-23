@@ -22,7 +22,7 @@ spring:
   jpa:
     open-in-view: true
     hibernate:
-      ddl-auto: update #최초에는 create로 만들지만 차후에는 update로 변경해야 함 , 당연히 mysql도 실행중이어야 함
+      ddl-auto: create #최초에는 create로 만들지만 차후에는 update로 변경해야 함 , 당연히 mysql도 실행중이어야 함
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl #entity를 만들 때 즉 테이블을 만들 때 변수 그대로 db에 만들어준다
       use-new-id-generator-mappings: false # jpa의 기본 넘버링 전략을 따라가지 않겠다

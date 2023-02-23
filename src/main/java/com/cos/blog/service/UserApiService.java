@@ -18,10 +18,11 @@ public class UserApiService {
 		userRepository.save(user);
 	}
 
-	@Transactional(readOnly = true) // select 할 때 트랜잭션 시작, 서비스 종료시에 트랜잭션 종료(정합성 유지)
+	// 전통적 방식의 로그인 구현
+	/*@Transactional(readOnly = true) // select 할 때 트랜잭션 시작, 서비스 종료시에 트랜잭션 종료(정합성 유지)
 	public User signIn(User user){
 		return userRepository.findByUserNameAndPassword(user.getUserName(), user.getPassword());
-	}
+	}*/
 }
 
 
