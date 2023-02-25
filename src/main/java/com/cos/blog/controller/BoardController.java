@@ -1,5 +1,6 @@
 package com.cos.blog.controller;
 
+import com.cos.blog.model.Board;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.cos.blog.service.BoardApiService;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class BoardController {
@@ -27,5 +29,10 @@ public class BoardController {
 		return "board/saveForm";
 	}
 
+	@GetMapping("/board/{id}")
+	public String findById(@PathVariable int id, Model model){
+		model.addAttribute("board",service.boardDetail(id));
+		return "/board/detail";
+	}
 
 }

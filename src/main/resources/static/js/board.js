@@ -3,6 +3,10 @@ let index = {
         $("#btn-save").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
             this.save();
         });
+
+         $("#btn-delete").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
+                    this.deleteById();
+        });
         // 전통적 방식의 로그인 구현
         /*$("#btn-login").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
             this.login();
@@ -28,6 +32,25 @@ let index = {
         }).fail(function (error){
             alert(JSON.stringify(error));
         });
+    },
+
+    deleteById:function(){
+            var id = $("#id").text(); // val()로 하면 delete request가 막힌다. 그래서 text로 해야 함
+
+            $.ajax({
+                type:"DELETE",
+                url:"/api/board/"+id,
+                dataType:"json"
+            }).done(function (resp,textStatus,jqXHR){
+                if(resp.status===200){
+                    alert("글 삭제 완료");
+                    location.href="/";
+                } else {
+                    alert("글 삭제 실패!!!!!!");
+                }
+            }).fail(function (error){
+                alert(JSON.stringify(error));
+            });
     }
 }
 
