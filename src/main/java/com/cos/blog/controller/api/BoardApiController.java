@@ -1,5 +1,6 @@
 package com.cos.blog.controller.api;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,6 +11,7 @@ import com.cos.blog.contract.ResponseDto;
 import com.cos.blog.model.Board;
 import com.cos.blog.service.BoardApiService;
 
+@Slf4j
 @RestController
 public class BoardApiController {
 
@@ -25,6 +27,15 @@ public class BoardApiController {
 	@DeleteMapping("/api/board/{id}")
 	public ResponseDto<Integer> deleteById(@PathVariable int id,@AuthenticationPrincipal PrincipalDetail principal){
 		service.deleteById(id,principal.getUser());
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
+
+	@PutMapping("/api/board/{id}")
+	public ResponseDto<Integer> updateById(@PathVariable int id, @RequestBody Board requestBoard, @AuthenticationPrincipal PrincipalDetail principal){
+		System.out.println("@@@@@@@ id :{}"+id);
+		System.out.println("@@@@@@@ requestBoard :{}"+requestBoard);
+		System.out.println("@@@@@@@ user :{}"+principal.getUser());
+		service.updateById(id,principal.getUser(),requestBoard);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
 }
