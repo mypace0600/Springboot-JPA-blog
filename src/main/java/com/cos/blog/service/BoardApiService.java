@@ -1,22 +1,19 @@
 package com.cos.blog.service;
 
 
-import java.util.List;
 
-import com.cos.blog.contract.ResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cos.blog.model.Board;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.BoardRepository;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
+@Slf4j
 @Service
 public class BoardApiService {
 	@Autowired
@@ -54,5 +51,21 @@ public class BoardApiService {
 		} else {
 			throw new IllegalArgumentException("글 삭제 실패 : 글 삭제 권한이 없습니다.");
 		}
+	}
+
+	@Transactional
+	public void updateById(int id, User user, Board requestBoard){
+		Board board = boardRepository.findById(id).orElseThrow(() -> {
+			return new IllegalArgumentException("글 찾기 실패 : 글을 찾을 수 없습니다.");
+		}); // 영속화
+		System.out.println("@@@@@@@  board :{}"+board);
+		if(board.getUser().getId()!=user.getId()){
+			throw new IllegalArgumentException("글 수정 실패 : 글 수정 권한이 없습니다.");
+		} else {
+			board.setTitle(requestBoard.getTitle());
+			board.setContent(requestBoard.getContent());
+			// 서비스가 종료될 때 트랜잭션이 종료되어 더티체킹이 일어나 자동 업데이트가 됨(db flush)
+		}
+		System.out.println("@@@@@@@ changed board :{}"+board);
 	}
 }
