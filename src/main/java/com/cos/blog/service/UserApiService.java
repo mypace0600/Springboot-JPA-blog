@@ -2,6 +2,7 @@ package com.cos.blog.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,8 @@ public class UserApiService {
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
+
+
 	@Transactional
 	public void signUp(User user){
 		String rawPassword = user.getPassword();
@@ -29,6 +32,21 @@ public class UserApiService {
 	public User signIn(User user){
 		return userRepository.findByUserNameAndPassword(user.getUserName(), user.getPassword());
 	}*/
+
+	@Transactional
+	public void update(User requestUser){
+		User user = userRepository.findById(requestUser.getId()).orElseThrow(()->{
+			return new IllegalArgumentException("해당 유저가 없습니다.");
+		});
+
+		String rawPassword = requestUser.getPassword();
+		String encPassword = encoder.encode(rawPassword);
+
+		user.setPassword(encPassword);
+		user.setEmail(requestUser.getEmail());
+
+
+	}
 }
 
 
