@@ -54,6 +54,7 @@ public class UserApiController {
 		// 세션값 변경을 직접 해줘야 함
 
 		// 세션 등록
+		// 토큰 생성시 필요한 값이 다 있는지 확인 필요
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(
 						user.getUserName(),
