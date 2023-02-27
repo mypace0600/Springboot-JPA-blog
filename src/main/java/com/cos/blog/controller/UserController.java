@@ -1,10 +1,18 @@
 package com.cos.blog.controller;
 
+import com.cos.blog.model.KakaoUserProfile;
+import com.cos.blog.model.User;
+import com.cos.blog.service.UserApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -16,12 +24,31 @@ import com.cos.blog.model.OAuthToken;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.UUID;
+
 // 인증 안된 사용자들은  auth 허용
 // 그냥 주소가 / 이면 index.jsp 허용
 // static 이하에 있는 내용 허용
 
 @Controller
 public class UserController {
+
+	@Autowired
+	private UserApiService service;
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	@Value("${cos.key}")
+	String cosKey;
+	@Value("${API-KEY.clientKey}")
+	String clientKey;
+	@Value("${API-KEY.callBackUri}")
+	String callBackUri;
+	@Value("${API-KEY.tokenRequestUri}")
+	String tokenRequestUri;
+
+	@Value("${API-KEY.profileRequestUri}")
+	String profileRequestUri;
+
 	@GetMapping("/auth/joinForm")
 	public String joinForm(){
 		return "user/joinForm";
@@ -34,16 +61,8 @@ public class UserController {
 	@GetMapping("/user/updateForm")
 	public String updateForm(){ return "user/updateForm";}
 
-	@Value("${API-KEY.clientKey}")
-	String clientKey;
-
-	@Value("${API-KEY.callBackUri}")
-	String callBackUri;
-
-	@Value("${API-KEY.tokenRequestUri}")
-	String tokenRequestUri;
 	@GetMapping("/auth/kakao/callback")
-	public @ResponseBody String kakaoCallbak(String code){
+	public String kakaoCallback(String code){
 
 		// POST 방식으로 Key-Value 타입으 데이터를 요청해야 함(카카오쪽으로)
 		// a 태그는 무조건 get 방식이라서 안된다.
@@ -81,8 +100,55 @@ public class UserController {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		System.out.println(oAuthToken.getAccess_token());
-		return "카카오 인증 완료 토큰 요청에 대한 응답 : "+response.getBody();
+
+		RestTemplate rt2 = new RestTemplate();
+		HttpHeaders headers2 = new HttpHeaders();
+		headers2.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
+		headers2.add("Authorization","Bearer "+oAuthToken.getAccess_token());
+		HttpEntity<MultiValueMap<String,String>> kakaoProfileRequest = new HttpEntity<>(headers2);
+		ResponseEntity<String> response2 = rt2.exchange(
+				profileRequestUri,
+				HttpMethod.POST,
+				kakaoProfileRequest,
+				String.class
+		);
+		ObjectMapper objectMapper2 = new ObjectMapper();
+		KakaoUserProfile kakaoUserProfile = null;
+		try {
+			kakaoUserProfile = objectMapper2.readValue(response2.getBody(),KakaoUserProfile.class);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		// User 오브젝트 구성을 위해 필요한 것 : username, password, email
+		String email = kakaoUserProfile.getKakao_account().getEmail();
+		String userName = email+"_"+kakaoUserProfile.getId();
+		// UUID tempPassword = UUID.randomUUID(); 해당 알고리즘으로 비밀번호 구성시 매번 달라지기 때문에 고정키 필요
+
+		User kakaoUser = User.builder()
+				.userName(userName)
+				.password(cosKey)
+				.email(email)
+				.oauth("kakao")
+				.build();
+
+		// 기존 가입자인지 비가입자인지 체크 필요
+		User originUser = service.find(kakaoUser.getUserName());
+		if (originUser.getUserName() == null) {
+			System.out.println("신규 회원입니다.");
+			service.signUp(kakaoUser);
+		}
+
+		// 자동 로그인 처리
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(
+						kakaoUser.getUserName(),
+						cosKey
+				)
+		);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		return "redirect:/";
 	}
 
 }
