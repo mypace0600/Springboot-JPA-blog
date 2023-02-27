@@ -38,7 +38,6 @@ public class User {
 	@Column(nullable = false, length = 50, unique = true)
 	private String email; // 이메일
 
-
 	// @ColumnDefault("'user'")
 	@Enumerated(EnumType.STRING) // DB는 RoleType이라는게 없다. 그래서 해당 어노테이션으로 Enum이 String이라고 알려주는 것임
 	private RoleType role; // 권한, Enum을 쓰는게 좋다 (admin,user,manager으로 도메인 범위 설정 가능으로 이외의 데이터 입력을 제한함)
