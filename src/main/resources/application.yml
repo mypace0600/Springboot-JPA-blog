@@ -15,9 +15,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3308/blog?serverTimezone=Asia/Seoul
     username: root
-    password: rootroot
+    password: root
 
   jpa:
     open-in-view: true
@@ -33,3 +33,9 @@ spring:
     jackson:
       serialization:
         fail-on-empty-beans: false
+
+
+API-KEY:
+  clientKey: 428545857802c4216b58954a115f7ad1
+  callBackUri : http://localhost:8000/auth/kakao/callback
+  tokenRequestUri : https://kauth.kakao.com/oauth/token
