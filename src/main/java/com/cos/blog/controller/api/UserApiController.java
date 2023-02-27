@@ -2,10 +2,18 @@ package com.cos.blog.controller.api;
 
 import javax.servlet.http.HttpSession;
 
+import com.cos.blog.config.auth.PrincipalDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +27,8 @@ public class UserApiController {
 
 	@Autowired
 	private UserApiService service;
-
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	@PostMapping("/auth/joinProc")
 	public ResponseDto<Integer> save(@RequestBody User user){
 		user.setRole(RoleType.USER);
@@ -36,5 +45,24 @@ public class UserApiController {
 		}
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}*/
+
+
+	@PutMapping("/user")
+	public ResponseDto<Integer> update(@RequestBody User user){
+		service.update(user);
+		// 위 서비스가 끝나고 여기로 오면 트랜잭션 종료되어 db의 값은 변경되었지만 세션값은 변경되지 않은 상태
+		// 세션값 변경을 직접 해줘야 함
+
+		// 세션 등록
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(
+						user.getUserName(),
+						user.getPassword()
+				)
+		);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
 
 }
