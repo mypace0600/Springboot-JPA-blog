@@ -3,6 +3,7 @@ package com.cos.blog.model;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -47,8 +48,9 @@ public class Board {
 	// DB는 오브젝트를 저장할 수 없다. 그래서 FK를 사용해야 하지만 자바는 오브젝트를 저장할 수 있다.
 
 	// @JoinColumn(name="replyId") 필요 없음, 원자성이 깨지기 때문
+	// cascade = CascadeType.REMOVE : 게시물 지울 때 댓글도 다 지우는 것
 	@JsonIgnoreProperties({"board"})
-	@OneToMany(mappedBy = "board", fetch = FetchType.EAGER) //mappedBy 연관관계의 주인이 아니다. FK가 아니다. Reply 테이블의 board가 FK키다. DB에 컬럼을 만들지 마.
+	@OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE) //mappedBy 연관관계의 주인이 아니다. FK가 아니다. Reply 테이블의 board가 FK키다. DB에 컬럼을 만들지 마.
 	@OrderBy("id desc ")
 	private List<Reply> replys;
 	// OneToMany의 Default FetchType은 LAZY이지만, 로직상 EAGER 전략으로 바꿔야 함

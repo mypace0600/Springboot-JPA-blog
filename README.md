@@ -1,4 +1,5 @@
 # Springboot-JPA-blog
+참고 강의 :  https://www.youtube.com/watch?v=6bhF5o4gAOs&list=PL93mKxaRDidECgjOBjPgI3Dyo8ka6Ilqm
 
 git bash로 커밋 푸시 하는 방법 : https://korin-learning.tistory.com/98
 
