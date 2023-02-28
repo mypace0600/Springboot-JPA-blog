@@ -114,7 +114,69 @@ let index = {
         }).fail(function (error){
             alert(JSON.stringify(error));
         });
+    },
+
+    replyDelete:function (boardId, replyId){
+
+        $.ajax({
+            type:"DELETE",
+            url:`/api/board/${boardId}/reply/${replyId}`,
+            dataType:"json"
+        }).done(function (resp){
+            if(resp.status===500){
+                alert("댓글삭제 실패");
+            } else {
+                alert("댓글삭제 완료");
+            }
+            location.href=`/board/${boardId}`;
+        }).fail(function (error){
+            alert(JSON.stringify(error));
+        });
+    },
+
+    replyUpdate:function (boardId,replyId){
+        let data = {
+            boardId : boardId,
+            content: $("#edit-reply-content").val()
+        };
+        console.log(replyId);
+        console.log(data);
+
+        $.ajax({
+            type:"PUT",
+            url:`/api/board/${boardId}/reply/${replyId}`,
+            data:JSON.stringify(data),
+            contentType:"application/json; charset=utf-8",
+            dataType:"json"
+        }).done(function (resp){
+            if(resp.status===500){
+                alert("댓글수정 실패");
+            } else {
+                alert("댓글수정 완료");
+            }
+            location.href=`/board/${boardId}`;
+        }).fail(function (error){
+            alert(JSON.stringify(error));
+        });
     }
 }
 
 index.init();
+
+
+document.querySelector(".btn-edit-box-display").addEventListener("click",()=>{
+    editBox();
+})
+
+function editBox(){
+    let exist = Array.from(document.getElementsByClassName('reply-content-exist'));
+    exist.forEach(box=>{
+        box.classList.add("d-none");
+    });
+
+    let edit = Array.from(document.getElementsByClassName("reply-content-edit"));
+    edit.forEach(box=>{
+        box.classList.remove("d-none");
+    });
+
+}

@@ -40,15 +40,20 @@
         <br />
         <div class="card">
             <div class="card-header">댓글 리스트</div>
-            <ul id="reply--box" class="list-group">
+            <ul id="reply-box" class="list-group">
                 <c:forEach var="reply" items="${board.replys}">
-                    <li id="reply--1" class="list-group-item d-flex justify-content-between">
-                        <div>${reply.content}</div>
+                    <li id="reply-${reply.id}" class="list-group-item d-flex justify-content-between">
+                        <div class="reply-content-exist">${reply.content}</div>
+                        <div class="d-none reply-content-edit">
+                            <textarea id="edit-reply-content" rows="1" class="form-control"></textarea>
+                        </div>
                         <div class="d-flex">
                             <div class="font-italic">${reply.user.userName} &nbsp;</div>
                             <c:if test="${reply.user.id == principal.user.id}">
-                                <button class="badge m-1">수정</button>
-                                <button class="badge m-1">삭제</button>
+                                <button type="button" class="badge m-1 btn-edit-box-display reply-content-exist">수정</button>
+                                <button onclick="index.replyUpdate(${board.id},${reply.id})"  type="button" id="btn-reply-edit-save" class="badge m-1 d-none reply-content-edit">저장</button>
+                                <button onclick="index.replyDelete(${board.id},${reply.id})" class="badge m-1 reply-content-exist">삭제</button>
+                                <button type="button" id="btn-reply-edit-cancel" class="badge m-1 d-none reply-content-edit">취소</button>
                             </c:if>
                         </div>
                     </li>

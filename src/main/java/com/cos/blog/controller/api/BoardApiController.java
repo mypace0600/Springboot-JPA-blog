@@ -45,4 +45,23 @@ public class BoardApiController {
 		service.replySave(dto);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
+
+	@DeleteMapping("/api/board/{boardId}/reply/{replyId}")
+	public ResponseDto<Integer> replyDelete(@PathVariable int replyId, @AuthenticationPrincipal PrincipalDetail principal) throws
+			Exception {
+		service.replyDelete(replyId,principal.getUser());
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
+
+	@PutMapping("/api/board/{boardId}/reply/{replyId}")
+	public ResponseDto<Integer> replyUpdate(@PathVariable int replyId, @RequestBody Reply requestReply, @AuthenticationPrincipal PrincipalDetail principal) throws
+			Exception {
+		log.info("@@@@@@@@@@@ replyId :{}",replyId);
+		log.info("@@@@@@@@@@@ requestReply :{}",requestReply);
+		log.info("@@@@@@@@@@@ principal.getUser() :{}",principal.getUser());
+		requestReply.setId(replyId);
+		log.info("@@@@@@@@@@@ requestReply setId :{}",requestReply);
+		service.replyUpdate(requestReply,principal.getUser());
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
 }

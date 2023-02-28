@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cos.blog.contract.ReplySaveRequestDto;
 import com.cos.blog.model.Board;
+import com.cos.blog.model.Reply;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.repository.ReplyRepository;
@@ -100,6 +101,34 @@ public class BoardApiService {
 
 		// 영속화 없이 nativeQuery를 통해 사용하는 방법
 		replyRepository.replyAutoSave(dto.getContent(),dto.getUserId(),dto.getBoardId());
+	}
+
+	public void replyDelete(int replyId, User principalUser) throws Exception {
+		User user = replyRepository.findById(replyId).orElseThrow(()->{
+			return new IllegalArgumentException("댓글을 찾을 수 업습니다.");
+		}).getUser();
+		if(user.getId() == principalUser.getId()) {
+			replyRepository.deleteById(replyId);
+		} else {
+			throw new Exception("댓글 삭제 권한이 없습니다.");
+		}
+	}
+
+	public void replyUpdate(Reply requestReply, User principalUser) throws Exception {
+		log.info("@@@@@ requestReply :{}",requestReply);
+		Reply reply = replyRepository.findById(requestReply.getId()).orElseThrow(()->{
+			return new IllegalArgumentException("댓글을 찾을 수 없습니다.");
+		});
+		log.info("@@@@@ reply :{}",reply);
+
+		User user = reply.getUser();
+		log.info("@@@@@ user :{}",user);
+		if(user.getId() != principalUser.getId()) {
+			throw new Exception("댓글 수정 권한이 없습니다.");
+		} else {
+			log.info("111");
+			reply.setContent(reply.getContent());
+		}
 	}
 
 }
