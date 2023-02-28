@@ -39,9 +39,6 @@ public class DummyControllerTest {
 	@Transactional // 함수 종료시 자동 commit 됨.
 	@PutMapping("/dummy/user/{id}")
 	public User updateUser(@PathVariable int id, @RequestBody User requestUser){ //Json 데이터를 스프링이 java object로 받아줌 (메세지 컨버터의 jackson 라이브러리가 받아주는거임. @RequestBody 어노테이션을 붙임으로서
-		System.out.println("id :"+id);
-		System.out.println("password :"+requestUser.getPassword());
-		System.out.println("email :"+requestUser.getEmail());
 
 		User user = userRepository.findById(id).orElseThrow(()->{
 			return new IllegalArgumentException("수정에 실패했습니다.");
@@ -113,12 +110,6 @@ public class DummyControllerTest {
 		user.setRole(RoleType.USER);
 		userRepository.save(user);
 
-		System.out.println("userName :"+user.getUserName());
-		System.out.println("password :"+user.getPassword());
-		System.out.println("email :"+user.getEmail());
-		System.out.println("id :"+user.getId());
-		System.out.println("role :"+user.getRole());
-		System.out.println("createDate:"+user.getCreateDate());
 		return "회원가입 완료";
 	}
 }

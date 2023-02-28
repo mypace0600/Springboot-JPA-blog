@@ -19,9 +19,7 @@ public class HttpControllerTest {
 				.password("1234")
 				.email("email")
 				.build();
-		System.out.println(TAG + "getter :" + m.getUsername());
 		m.setUsername("cos");
-		System.out.println(TAG + "setter :" + m.getUsername());
 		return "lombok test 완료";
 	}
 

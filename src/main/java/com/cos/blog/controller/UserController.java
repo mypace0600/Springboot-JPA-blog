@@ -122,7 +122,7 @@ public class UserController {
 
 		// User 오브젝트 구성을 위해 필요한 것 : username, password, email
 		String email = kakaoUserProfile.getKakao_account().getEmail();
-		String userName = email+"_"+kakaoUserProfile.getId();
+		String userName = "kakao_"+kakaoUserProfile.getId();
 		// UUID tempPassword = UUID.randomUUID(); 해당 알고리즘으로 비밀번호 구성시 매번 달라지기 때문에 고정키 필요
 
 		User kakaoUser = User.builder()
@@ -135,7 +135,6 @@ public class UserController {
 		// 기존 가입자인지 비가입자인지 체크 필요
 		User originUser = service.find(kakaoUser.getUserName());
 		if (originUser.getUserName() == null) {
-			System.out.println("신규 회원입니다.");
 			service.signUp(kakaoUser);
 		}
 

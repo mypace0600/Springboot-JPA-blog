@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.cos.blog.config.auth.PrincipalDetail;
+import com.cos.blog.contract.ReplySaveRequestDto;
 import com.cos.blog.contract.ResponseDto;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.Reply;
@@ -33,16 +34,15 @@ public class BoardApiController {
 
 	@PutMapping("/api/board/{id}")
 	public ResponseDto<Integer> updateById(@PathVariable int id, @RequestBody Board requestBoard, @AuthenticationPrincipal PrincipalDetail principal){
-		System.out.println("@@@@@@@ id :{}"+id);
-		System.out.println("@@@@@@@ requestBoard :{}"+requestBoard);
-		System.out.println("@@@@@@@ user :{}"+principal.getUser());
 		service.updateById(id,principal.getUser(),requestBoard);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
 
+
+	// 데이터를 받을 때 컨트롤러에서 DTO 를 만들어서 받는게 좋다.
 	@PostMapping("/api/board/{boardId}/reply")
-	public ResponseDto<Integer> replySave(@PathVariable int boardId, @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
-		service.replySave(boardId,reply,principal.getUser());
+	public ResponseDto<Integer> replySave(@RequestBody ReplySaveRequestDto dto) {
+		service.replySave(dto);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
 }

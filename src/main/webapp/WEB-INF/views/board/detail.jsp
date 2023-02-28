@@ -32,6 +32,7 @@
         <div class="card">
             <form>
                 <input type="hidden" id="boardId" value="${board.id}"/>
+                <input type="hidden" id="userId" value="${principal.user.id}"/>
                 <div class="card-body"><textarea id="reply-content" rows="1" class="form-control"></textarea></div>
                 <div class="card-footer"><button type="button" id="btn-reply-save" class="btn- btn-primary">등록</button></div>
             </form>
@@ -44,7 +45,6 @@
                     <li id="reply--1" class="list-group-item d-flex justify-content-between">
                         <div>${reply.content}</div>
                         <div class="d-flex">
-                            <div class="font-italic">${reply.createDate} &nbsp;</div>
                             <div class="font-italic">${reply.user.userName} &nbsp;</div>
                             <c:if test="${reply.user.id == principal.user.id}">
                                 <button class="badge m-1">수정</button>
