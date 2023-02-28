@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.cos.blog.config.auth.PrincipalDetail;
 import com.cos.blog.contract.ResponseDto;
 import com.cos.blog.model.Board;
+import com.cos.blog.model.Reply;
 import com.cos.blog.service.BoardApiService;
 
 @Slf4j
@@ -36,6 +37,12 @@ public class BoardApiController {
 		System.out.println("@@@@@@@ requestBoard :{}"+requestBoard);
 		System.out.println("@@@@@@@ user :{}"+principal.getUser());
 		service.updateById(id,principal.getUser(),requestBoard);
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
+
+	@PostMapping("/api/board/{boardId}/reply")
+	public ResponseDto<Integer> replySave(@PathVariable int boardId, @RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
+		service.replySave(boardId,reply,principal.getUser());
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
 }
