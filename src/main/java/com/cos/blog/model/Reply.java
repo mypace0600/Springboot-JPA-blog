@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.cos.blog.contract.ReplySaveRequestDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ser.std.TimeZoneSerializer;
 
@@ -22,12 +23,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Reply {
 
 	@Id
@@ -47,4 +50,10 @@ public class Reply {
 
 	@CreationTimestamp
 	private Timestamp createDate;
+
+	/*public void autoMatching(User user, Board board, String content){
+		setUser(user);
+		setBoard(board);
+		setContent(content);
+	}*/
 }

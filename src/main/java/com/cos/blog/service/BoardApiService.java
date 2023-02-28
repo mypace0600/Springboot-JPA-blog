@@ -9,18 +9,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cos.blog.contract.ReplySaveRequestDto;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.Reply;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.repository.ReplyRepository;
+import com.cos.blog.repository.UserRepository;
 
 @Slf4j
 @Service
 public class BoardApiService {
 	@Autowired
 	private BoardRepository boardRepository;
-
+	@Autowired
+	private UserRepository userRepository;
 	@Autowired
 	private ReplyRepository replyRepository;
 
@@ -48,8 +51,6 @@ public class BoardApiService {
 			return new IllegalArgumentException("글 삭제 실패 : 작성자가 아닙니다.");
 		}).getUser().getId();
 
-		System.out.println("@@@@ userId : "+ userId);
-		System.out.println("@@@@ writerId : "+ writerId);
 
 		if(userId == writerId) {
 			boardRepository.deleteById(id);
@@ -63,7 +64,6 @@ public class BoardApiService {
 		Board board = boardRepository.findById(id).orElseThrow(() -> {
 			return new IllegalArgumentException("글 찾기 실패 : 글을 찾을 수 없습니다.");
 		}); // 영속화
-		System.out.println("@@@@@@@  board :{}"+board);
 		if(board.getUser().getId()!=user.getId()){
 			throw new IllegalArgumentException("글 수정 실패 : 글 수정 권한이 없습니다.");
 		} else {
@@ -71,19 +71,35 @@ public class BoardApiService {
 			board.setContent(requestBoard.getContent());
 			// 서비스가 종료될 때 트랜잭션이 종료되어 더티체킹이 일어나 자동 업데이트가 됨(db flush)
 		}
-		System.out.println("@@@@@@@ changed board :{}"+board);
 	}
 
 	@Transactional
-	public void replySave(int boardId,Reply requestReply, User user){
-		requestReply.setUser(user);
+	public void replySave(ReplySaveRequestDto dto){
 
-		Board board = boardRepository.findById(boardId).orElseThrow(()->{
-			return new IllegalArgumentException("게시 글을 찾을 수 없습니다.");
+		// 영속화 방법
+		/*User user = userRepository.findById(dto.getUserId()).orElseThrow(()->{
+			return new IllegalArgumentException("회원을 찾을 수 없습니다.");
 		});
-		requestReply.setBoard(board);
 
-		replyRepository.save(requestReply);
+		Board board = boardRepository.findById(dto.getBoardId()).orElseThrow(()->{
+			return new IllegalArgumentException("게시 글을 찾을 수 없습니다.");
+		});*/
+
+		// 따로 model에 함수를 만들어서 매칭을 시키는 것
+		// Reply reply = new Reply();
+		// reply.autoMatching(user, board,dto.getContent());
+
+		/*Reply reply = Reply.builder()
+				.user(user)
+				.board(board)
+				.content(dto.getContent())
+				.build();
+
+		replyRepository.save(reply);*/
+
+
+		// 영속화 없이 nativeQuery를 통해 사용하는 방법
+		replyRepository.replyAutoSave(dto.getContent(),dto.getUserId(),dto.getBoardId());
 	}
 
 }

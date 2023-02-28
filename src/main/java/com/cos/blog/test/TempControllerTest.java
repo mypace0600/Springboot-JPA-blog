@@ -8,7 +8,6 @@ public class TempControllerTest {
 
 	@GetMapping("/temp/home")
 	public String tempHome(){
-		System.out.println("tempHome()");
 		// 파일 리턴 기본 경로 : src/main/resources/static
 		// 리턴명 : /home.html
 		// 풀경로 : src/main/resources/static/home.html

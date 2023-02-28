@@ -25,7 +25,6 @@ public class BoardController {
 
 	@GetMapping("/board/saveForm")
 	public String saveForm(){
-		System.out.println("");
 		return "board/saveForm";
 	}
 
