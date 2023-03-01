@@ -56,11 +56,7 @@ public class BoardApiController {
 	@PutMapping("/api/board/{boardId}/reply/{replyId}")
 	public ResponseDto<Integer> replyUpdate(@PathVariable int replyId, @RequestBody Reply requestReply, @AuthenticationPrincipal PrincipalDetail principal) throws
 			Exception {
-		log.info("@@@@@@@@@@@ replyId :{}",replyId);
-		log.info("@@@@@@@@@@@ requestReply :{}",requestReply);
-		log.info("@@@@@@@@@@@ principal.getUser() :{}",principal.getUser());
 		requestReply.setId(replyId);
-		log.info("@@@@@@@@@@@ requestReply setId :{}",requestReply);
 		service.replyUpdate(requestReply,principal.getUser());
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}

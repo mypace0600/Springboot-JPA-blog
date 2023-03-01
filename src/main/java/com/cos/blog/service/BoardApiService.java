@@ -4,7 +4,6 @@ package com.cos.blog.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,11 +20,9 @@ import com.cos.blog.repository.ReplyRepository;
 @Service
 @RequiredArgsConstructor
 public class BoardApiService {
-	/*@Autowired
-	private BoardRepository boardRepository;*/
+
 	private final BoardRepository boardRepository;
-	/*@Autowired
-	private ReplyRepository replyRepository;*/
+
 	private final ReplyRepository replyRepository;
 
 	@Transactional
@@ -34,11 +31,11 @@ public class BoardApiService {
 		board.setUser(user);
 		boardRepository.save(board);
 	}
+
 	@Transactional(readOnly = true)
 	public Page<Board> getList(Pageable pageable){
 		return boardRepository.findAll(pageable);
 	}
-
 
 	@Transactional(readOnly = true)
 	public Board boardDetail(int id){
@@ -108,26 +105,28 @@ public class BoardApiService {
 			return new IllegalArgumentException("댓글을 찾을 수 업습니다.");
 		}).getUser();
 		if(user.getId() == principalUser.getId()) {
-			replyRepository.deleteById(replyId);
+			try {
+				replyRepository.deleteById(replyId);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
 		} else {
 			throw new Exception("댓글 삭제 권한이 없습니다.");
 		}
 	}
 
 	public void replyUpdate(Reply requestReply, User principalUser) throws Exception {
-		log.info("@@@@@ requestReply :{}",requestReply);
-		Reply reply = replyRepository.findById(requestReply.getId()).orElseThrow(()->{
-			return new IllegalArgumentException("댓글을 찾을 수 없습니다.");
-		});
-		log.info("@@@@@ reply :{}",reply);
 
-		User user = reply.getUser();
+		User user = replyRepository.findById(requestReply.getId()).orElseThrow(()->{
+			return new IllegalArgumentException("댓글을 찾을 수 업습니다.");
+		}).getUser();
 		log.info("@@@@@ user :{}",user);
+
 		if(user.getId() != principalUser.getId()) {
 			throw new Exception("댓글 수정 권한이 없습니다.");
 		} else {
 			log.info("111");
-			reply.setContent(reply.getContent());
+			replyRepository.replyUpdate(requestReply.getContent(),requestReply.getId());
 		}
 	}
 
