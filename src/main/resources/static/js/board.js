@@ -164,19 +164,46 @@ let index = {
 index.init();
 
 
-document.querySelector(".btn-edit-box-display").addEventListener("click",()=>{
-    editBox();
+document.querySelector(".btn-edit-box-display").addEventListener("click",(e)=>{
+    console.log(e.target.id);
+    editBox(e.target.id);
 })
 
-function editBox(){
-    let exist = Array.from(document.getElementsByClassName('reply-content-exist'));
+function editBox(id){
+    let exist = Array.from(document.getElementsByClassName(id));
+    console.log(exist);
     exist.forEach(box=>{
+    console.log(box);
         box.classList.add("d-none");
     });
 
-    let edit = Array.from(document.getElementsByClassName("reply-content-edit"));
+    let edit = Array.from(document.getElementsByClassName(id+"none"));
+    console.log(edit);
     edit.forEach(box=>{
+    console.log(box);
         box.classList.remove("d-none");
     });
 
+}
+
+document.querySelector(".btn-reply-edit-cancel").addEventListener("click",(e)=>{
+console.log(e.target.id);
+    editCancel(e.target.id);
+})
+
+function editCancel(id){
+let exist = Array.from(document.getElementsByClassName(id));
+console.log(exist);
+    exist.forEach(box=>{
+    console.log(box);
+        box.classList.remove("d-none");
+    });
+
+    let edit = Array.from(document.getElementsByClassName(id+"none"));
+
+    console.log(edit);
+    edit.forEach(box=>{
+    console.log(box);
+        box.classList.add("d-none");
+    });
 }
