@@ -57,4 +57,6 @@ public class Board {
 
 	@CreationTimestamp
 	private Timestamp createDate; // 등록일
+
+	private Boolean hidden;
 }
