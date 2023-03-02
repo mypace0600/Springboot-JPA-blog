@@ -20,10 +20,16 @@ authenticationManager는 UsernamePasswordAuthenticationToken을 만들어서
 세션 쪽 SecurityContext 안에 저장해둔다.
 
 
+redis 관련 내용 참고 :
+https://ssoco.tistory.com/19
+https://inpa.tistory.com/entry/REDIS-%F0%9F%93%9A-Window10-%ED%99%98%EA%B2%BD%EC%97%90-Redis-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0#redis_%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0
+
+소스 다운시 redis 설정 필요!!
+
 ----
 
 추가 수정 부분
 1. 게시글 삭제 버튼 클릭시 alert 띄워서 한번 더 확인
 2. 비밀글 기능 만들어서 작성한 사람만 접근 할 수 있도록 만들기
-3. 조회수 session 통해서 중복 방지하기
+3. 조회수 중복 방지하기 - 3월 2일 완료
 4. 작성일 기준, 조회수 기준으로 정렬할 수 있도록 기능 추가
