@@ -18,3 +18,12 @@ ajax done 내용 관련 참고자료 : https://developyo.tistory.com/88
 필터가 username, password를 가로 채서 authenticationManager에게 보낸다
 authenticationManager는 UsernamePasswordAuthenticationToken을 만들어서
 세션 쪽 SecurityContext 안에 저장해둔다.
+
+
+----
+
+추가 수정 부분
+1. 게시글 삭제 버튼 클릭시 alert 띄워서 한번 더 확인
+2. 비밀글 기능 만들어서 작성한 사람만 접근 할 수 있도록 만들기
+3. 조회수 session 통해서 중복 방지하기
+4. 작성일 기준, 조회수 기준으로 정렬할 수 있도록 기능 추가
