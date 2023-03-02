@@ -60,4 +60,5 @@ public class BoardApiController {
 		service.replyUpdate(requestReply,principal.getUser());
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
+
 }
