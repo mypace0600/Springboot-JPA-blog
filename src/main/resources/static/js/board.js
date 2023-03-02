@@ -22,11 +22,15 @@ let index = {
     },
 
     save:function (){
+        let checkBox = document.getElementById("hiddenStat");
+        let isHiddenChecked = checkBox.checked;
+        console.log("isHiddenChecked : "+isHiddenChecked);
         let data = {
             title: $("#title").val(),
-            content: $("#content").val()
+            content: $("#content").val(),
+            hidden: isHiddenChecked
         };
-
+        console.log("data : "+JSON.stringify(data));
         $.ajax({
             type:"POST",
             url:"/api/board",
