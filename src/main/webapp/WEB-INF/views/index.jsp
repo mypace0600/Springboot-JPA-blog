@@ -7,6 +7,9 @@
         <div class="card m-2">
             <div class="card-body">
                 <h4 class="card-title">${board.title}</h4>
+                <div> 작성자 : ${board.user.userName}</div>
+                <div> 조회수 : ${board.count}</div>
+                <br />
                 <a href="/board/${board.id}" class="btn btn-primary">상세보기</a>
             </div>
         </div>

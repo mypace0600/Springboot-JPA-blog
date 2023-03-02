@@ -2,6 +2,9 @@ package com.cos.blog.service;
 
 
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -9,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cos.blog.config.RedisService;
 import com.cos.blog.contract.ReplySaveRequestDto;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.Reply;
@@ -22,8 +26,8 @@ import com.cos.blog.repository.ReplyRepository;
 public class BoardApiService {
 
 	private final BoardRepository boardRepository;
-
 	private final ReplyRepository replyRepository;
+	private final RedisService redisService;
 
 	@Transactional
 	public void save(Board board, User user){
@@ -125,9 +129,25 @@ public class BoardApiService {
 		if(user.getId() != principalUser.getId()) {
 			throw new Exception("댓글 수정 권한이 없습니다.");
 		} else {
-			log.info("111");
+
 			replyRepository.replyUpdate(requestReply.getContent(),requestReply.getId());
 		}
+	}
+
+	@Transactional
+	public void updateCount(int id, HttpServletRequest request, User user){
+		String clientAddress = request.getRemoteAddr();
+		log.info("clientAddress :{}",clientAddress);
+		boolean isFirst = redisService.isFirstIpRequest(clientAddress,id,user.getId());
+		if(isFirst){
+			Board board = boardRepository.findById(id).orElseThrow(()->{
+				return new IllegalArgumentException("게시물을 찾을 수 없습니다.");
+			});
+			int count = board.getCount()+1;
+			log.info("count :{}",count);
+			board.setCount(count);
+		}
+		redisService.writeClientRequest(clientAddress,id,user.getId());
 	}
 
 }

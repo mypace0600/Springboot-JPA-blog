@@ -1,18 +1,18 @@
 let index = {
     init:function (){
-        $("#btn-save").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
+        $("#btn-save").on("click",()=>{
             this.save();
         });
 
-        $("#btn-delete").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
-                    this.deleteById();
+        $("#btn-delete").on("click",()=>{
+            this.deleteById();
         });
 
-        $("#btn-update").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
-                    this.updateById();
+        $("#btn-update").on("click",()=>{
+            this.updateById();
         });
 
-        $("#btn-reply-save").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
+        $("#btn-reply-save").on("click",()=>{
             this.replySave();
         });
         // 전통적 방식의 로그인 구현

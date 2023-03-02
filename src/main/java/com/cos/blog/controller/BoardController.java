@@ -1,18 +1,24 @@
 package com.cos.blog.controller;
 
-import com.cos.blog.model.Board;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.cos.blog.config.auth.PrincipalDetail;
 import com.cos.blog.service.BoardApiService;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
+@Slf4j
 public class BoardController {
 
 	@Autowired
@@ -29,8 +35,10 @@ public class BoardController {
 	}
 
 	@GetMapping("/board/{id}")
-	public String findById(@PathVariable int id, Model model){
+	public String findById(@PathVariable int id, Model model, HttpServletRequest request, @AuthenticationPrincipal
+						   PrincipalDetail principal){
 		model.addAttribute("board",service.boardDetail(id));
+		service.updateCount(id,request,principal.getUser());
 		return "/board/detail";
 	}
 
@@ -39,5 +47,8 @@ public class BoardController {
 		model.addAttribute("board",service.boardDetail(id));
 		return "/board/updateForm";
 	}
+
+
+
 
 }
