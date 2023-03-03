@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cos.blog.config.RedisService;
 import com.cos.blog.contract.ReplySaveRequestDto;
+import com.cos.blog.handler.GlobalExceptionHandler;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.Reply;
 import com.cos.blog.model.User;
@@ -42,8 +43,14 @@ public class BoardApiService {
 	}
 
 	@Transactional(readOnly = true)
-	public Board boardDetail(int id){
-		return boardRepository.findById(id).orElseThrow(()->{return new IllegalArgumentException("글 상세보기 실패 : 게시글 정보를 찾을 수 없습니다.");});
+	public Board boardDetail(int id, User user) throws Exception{
+		Board board = boardRepository.findById(id).orElseThrow(()->{return new IllegalArgumentException("글 상세보기 실패 : 게시글 정보를 찾을 수 없습니다.");});
+		if(board.getHidden()){
+			if(board.getUser().getId()!=user.getId()){
+				throw new IllegalArgumentException("비밀글 접근 권한이 없습니다.");
+			}
+		}
+		return board;
 	}
 
 	@Transactional
@@ -71,6 +78,7 @@ public class BoardApiService {
 		} else {
 			board.setTitle(requestBoard.getTitle());
 			board.setContent(requestBoard.getContent());
+			board.setHidden(requestBoard.getHidden());
 			// 서비스가 종료될 때 트랜잭션이 종료되어 더티체킹이 일어나 자동 업데이트가 됨(db flush)
 		}
 	}

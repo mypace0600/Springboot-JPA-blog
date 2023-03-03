@@ -5,7 +5,7 @@ let index = {
         });
 
         $("#btn-delete").on("click",()=>{
-            this.deleteById();
+            this.areYouSure();
         });
 
         $("#btn-update").on("click",()=>{
@@ -49,6 +49,14 @@ let index = {
         });
     },
 
+    areYouSure:function (){
+      if(confirm("are you sure?")){
+          this.deleteById();
+      } else {
+
+      }
+    },
+
     deleteById:function(){
             let id = $("#id").text(); // val()로 하면 delete request가 막힌다. 그래서 text로 해야 함
 
@@ -71,11 +79,19 @@ let index = {
     updateById:function(){
 
            let id = $("#id").val();
-
+           let checkBox = $("#hiddenStat").val();
+        console.log(checkBox);
+           let hidden = false;
+           if(checkBox==="on") {
+               hidden = true;
+           }
+        console.log(hidden);
            let data = {
                title: $("#title").val(),
-               content: $("#content").val()
+               content: $("#content").val(),
+               hidden:hidden
            };
+           console.log(data.hidden);
 
            $.ajax({
                type:"PUT",
@@ -211,3 +227,6 @@ console.log(exist);
         box.classList.add("d-none");
     });
 }
+
+
+
