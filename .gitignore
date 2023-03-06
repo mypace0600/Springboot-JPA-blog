@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### yml 파일 ###
-*.yml
+#*.yml
