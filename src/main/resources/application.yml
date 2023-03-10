@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8000
   servlet:
     context-path: /
     encoding:
@@ -20,18 +20,14 @@ spring:
         max-idle: 10
         min-idle: 2
     port: 6379
-    host: 3.136.120.83
+    host: 127.0.0.1
      # redis 설정 필요
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://3.136.120.83:3306
+    url: jdbc:mysql://localhost:3308/blog?serverTimezone=Asia/Seoul
     username: root
-    password: 1234
-
-  sql:
-    init:
-      platform: mysql
+    password: root
 
   jpa:
     open-in-view: true
@@ -51,7 +47,7 @@ spring:
 
 API-KEY:
   clientKey: 428545857802c4216b58954a115f7ad1
-  callBackUri : http://3.136.120.83:8080/auth/kakao/callback
+  callBackUri : http://localhost:8000/auth/kakao/callback
   tokenRequestUri : https://kauth.kakao.com/oauth/token
   profileRequestUri : https://kapi.kakao.com/v2/user/me
 

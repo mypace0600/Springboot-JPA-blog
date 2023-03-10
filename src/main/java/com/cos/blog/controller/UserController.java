@@ -1,6 +1,7 @@
 package com.cos.blog.controller;
 
 import com.cos.blog.model.KakaoUserProfile;
+import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
 import com.cos.blog.service.UserApiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +130,7 @@ public class UserController {
 				.userName(userName)
 				.password(cosKey)
 				.email(email)
+				.role(RoleType.USER)
 				.oauth("kakao")
 				.build();
 
