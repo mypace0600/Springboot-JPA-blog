@@ -1,6 +1,8 @@
 package com.cos.blog.controller.api;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,13 +21,29 @@ public class AdminApiController {
 
 	private final AdminApiService service;
 
-	@PutMapping("/admin/role/")
-	public ResponseDto<Integer> adminRole(@RequestBody User user) throws Exception{
+	@PutMapping("/admin/role/request")
+	public ResponseDto<Integer> adminRoleRequest(@RequestBody User user) throws Exception{
 		try {
-			service.adminRoleUpdate(user);
+			service.adminRoleRequest(user);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
+
+	@PutMapping("/admin/role/{id}")
+	public ResponseDto<Integer> adminRoleApprove(@PathVariable int id) throws Exception{
+		try {
+			service.adminRoleApprove(id);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
+
+	@DeleteMapping("/admin/role/{id}")
+	public ResponseDto<Integer> adminRoleDelete(@PathVariable int id) throws Exception{
+		service.adminRoleDelete(id);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
 }

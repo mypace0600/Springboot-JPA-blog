@@ -9,6 +9,12 @@ let index = {
         $("#btn-request-admin-role").on("click",()=>{
             this.updateAdminById();
         });
+        $("#btn-approve-request-admin-role").on("click",()=>{
+            this.approveAdminById();
+        })
+        $("#admin-user-delete").on("click",()=>{
+            this.deleteUser();
+        })
 
         // 전통적 방식의 로그인 구현
         /*$("#btn-login").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
@@ -101,11 +107,11 @@ let index = {
 
         $.ajax({
             type:"PUT",
-            url:"/admin/role/",
+            url:"/admin/role/request",
             data:JSON.stringify(data),
             contentType:"application/json; charset=utf-8",
             dataType:"json"
-        }).done(function(resp){
+        }).done(function (resp){
             if(resp.status === 200 || resp.data === 1){
                 alert("요청 완료");
                 location.href = "/";
@@ -117,7 +123,54 @@ let index = {
         }).fail(function (error){
             alert(JSON.stringify(error));
         });
+    },
+
+    deleteUser:function (){
+        let data = {
+            id : $("#id").val()
+        };
+
+        $.ajax({
+            type:"DELETE",
+            url:"/admin/role/"+data.id,
+            dataType:"json"
+        }).done(function (resp){
+            if(resp.status === 200 || resp.data === 1){
+                alert("삭제 완료");
+                location.href = "/";
+            } else {
+                let index = resp.data.indexOf(":");
+                let errorStr = resp.data.substring(index);
+                alert("삭제 실패 "+ errorStr);
+            }
+        }).fail(function (error){
+            alert(JSON.stringify(error));
+        });
     }
 }
 
 index.init();
+
+
+document.querySelector("btn-approve-request-admin-role").addEventListener("click",(e)=>{
+    approveAdminById(e.target.id);
+})
+
+function approveAdminById(id){
+    $.ajax({
+        type:"PUT",
+        url:"/admin/role/"+id,
+        dataType:"json"
+    }).done(function (resp){
+        if(resp.status === 200 || resp.data === 1){
+            alert("요청 완료");
+            location.href = "/";
+        } else {
+            let index = resp.data.indexOf(":");
+            let errorStr = resp.data.substring(index);
+            alert("요청 실패 "+ errorStr);
+        }
+    }).fail(function (error){
+        alert(JSON.stringify(error));
+    });
+}
