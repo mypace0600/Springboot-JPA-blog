@@ -26,7 +26,7 @@ public class AdminApiService {
 	}
 
 	@Transactional
-	public void adminRoleUpdate(User requestUser)throws Exception{
+	public void adminRoleRequest(User requestUser)throws Exception{
 		User user = userRepository.findById(requestUser.getId()).orElseThrow(()->{
 			return new IllegalArgumentException("해당 유저가 없습니다.");
 		});
@@ -37,6 +37,21 @@ public class AdminApiService {
 			throw new IllegalArgumentException("이미 요청했습니다.");
 		}
 		user.setRole(RoleType.REQUEST);
+	}
+
+	@Transactional
+	public void adminRoleApprove(int id)throws Exception{
+		User user = userRepository.findById(id).orElseThrow(()->{
+			return new IllegalArgumentException("해당 유저가 없습니다.");
+		});
+		if(user.getRole().equals(RoleType.ADMIN)){
+			throw new IllegalArgumentException("이미 관리자 입니다.");
+		}
+		user.setRole(RoleType.ADMIN);
+	}
+	@Transactional
+	public void adminRoleDelete(int id){
+		userRepository.deleteById(id);
 	}
 
 }
