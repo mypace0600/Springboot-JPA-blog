@@ -17,8 +17,13 @@
             <label for="email">Email address:</label>
             <input type="email" class="form-control" value="${principal.user.email}" id="email">
         </div>
+        <div class="form-group">
+            <label for="role">Role:</label>
+            <input type="text" class="form-control" value="${principal.user.role}" id="role" readonly>
+        </div>
     </form>
     <button id="btn-update" class="btn btn-primary">수정 완료</button>
+    <button class="btn btn-secondary m-1" onclick="history.back()">돌아가기</button>
 </div>
 
 <script src="/js/user.js"></script>

@@ -80,12 +80,10 @@ let index = {
 
            let id = $("#id").val();
            let checkBox = $("#hiddenStat").val();
-        console.log(checkBox);
            let hidden = false;
            if(checkBox==="on") {
                hidden = true;
            }
-        console.log(hidden);
            let data = {
                title: $("#title").val(),
                content: $("#content").val(),
