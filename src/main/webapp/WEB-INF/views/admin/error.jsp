@@ -13,7 +13,7 @@
         </div>
     </div>
 
-<script src="/js/user.js"></script>
+<script src="/js/admin.js"></script>
 <%@include file="../layout/footer.jsp"%>
 
 

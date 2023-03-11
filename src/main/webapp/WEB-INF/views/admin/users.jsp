@@ -3,20 +3,25 @@
 
 <%@include file="../layout/header.jsp"%>
 <div class="container">
-    <h1>hello admin</h1>
+    <h1>User List</h1>
     <c:forEach var="user" items="${users.content}">
         <form>
             <div>
-                <div>username : ${user.userName}</div>
+                <div><a href="/admin/user=${user.id}/boards">username : ${user.userName}</a></div>
                 <div>email : ${user.email}</div>
                 <div>role : ${user.role}</div>
                 <div>createDate : ${user.createDate}</div>
             </div>
+            <button type="button" class="btn btn-danger admin-user-delete" id="${user.id}">계정 삭제</button>
+            <c:choose>
+                <c:when test="${user.role eq 'REQUEST'}">
+                    <button type="button" class="btn btn-primary btn-approve-request-admin-role" id="${user.id}" value="ADMIN">Admin 권한 요청 승인</button>
+                </c:when>
+                <c:when test="${user.role eq 'ADMIN'}">
+                    <button type="button" class="btn btn-danger btn-approve-request-admin-role" id="${user.id}" value="USER">Admin 권한 해제</button>
+                </c:when>
+            </c:choose>
             <hr />
-            <button type="button" class="btn btn-danger" class="admin-user-delete" id="${user.id}">계정 삭제</button>
-            <c:if test="${user.role eq 'REQUEST'}">
-                <button type="button" class="btn btn-primary" class="btn-approve-request-admin-role" id="${user.id}">Admin 권한 요청 승인</button>
-            </c:if>
         </form>
         <br />
     </c:forEach>
@@ -40,7 +45,7 @@
     </ul>
 </div>
 
-<script src="/js/user.js"></script>
+<script src="/js/admin.js"></script>
 <%@include file="../layout/footer.jsp"%>
 
 

@@ -17,6 +17,7 @@ import com.cos.blog.contract.ReplySaveRequestDto;
 import com.cos.blog.handler.GlobalExceptionHandler;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.Reply;
+import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.repository.ReplyRepository;
@@ -46,7 +47,9 @@ public class BoardApiService {
 	public Board boardDetail(int id, User user) throws Exception{
 		Board board = boardRepository.findById(id).orElseThrow(()->{return new IllegalArgumentException("글 상세보기 실패 : 게시글 정보를 찾을 수 없습니다.");});
 		if(board.getHidden()){
-			if(board.getUser().getId()!=user.getId()){
+			if(board.getUser().getId()==user.getId() || user.getRole().equals(RoleType.ADMIN)){
+				return board;
+			} else {
 				throw new IllegalArgumentException("비밀글 접근 권한이 없습니다.");
 			}
 		}
@@ -57,11 +60,9 @@ public class BoardApiService {
 	public void deleteById(int id,User user){
 		int userId = user.getId();
 		int writerId = boardRepository.findById(id).orElseThrow(()->{
-			return new IllegalArgumentException("글 삭제 실패 : 작성자가 아닙니다.");
+			return new IllegalArgumentException("글 삭제 실패 : 유저를 찾을 수 없습니다.");
 		}).getUser().getId();
-
-
-		if(userId == writerId) {
+		if(userId == writerId || user.getRole().equals(RoleType.ADMIN)) {
 			boardRepository.deleteById(id);
 		} else {
 			throw new IllegalArgumentException("글 삭제 실패 : 글 삭제 권한이 없습니다.");
@@ -73,13 +74,13 @@ public class BoardApiService {
 		Board board = boardRepository.findById(id).orElseThrow(() -> {
 			return new IllegalArgumentException("글 찾기 실패 : 글을 찾을 수 없습니다.");
 		}); // 영속화
-		if(board.getUser().getId()!=user.getId()){
-			throw new IllegalArgumentException("글 수정 실패 : 글 수정 권한이 없습니다.");
-		} else {
+		if(board.getUser().getId()==user.getId() || user.getRole().equals(RoleType.ADMIN)){
 			board.setTitle(requestBoard.getTitle());
 			board.setContent(requestBoard.getContent());
 			board.setHidden(requestBoard.getHidden());
 			// 서비스가 종료될 때 트랜잭션이 종료되어 더티체킹이 일어나 자동 업데이트가 됨(db flush)
+		} else {
+			throw new IllegalArgumentException("글 수정 실패 : 글 수정 권한이 없습니다.");
 		}
 	}
 
