@@ -32,9 +32,9 @@ public class AdminApiController {
 	}
 
 	@PutMapping("/admin/role/{id}")
-	public ResponseDto<Integer> adminRoleApprove(@PathVariable int id) throws Exception{
+	public ResponseDto<Integer> updateAdminRole(@PathVariable int id, @RequestBody User requestUser) throws Exception{
 		try {
-			service.adminRoleApprove(id);
+			service.updateAdminRole(id,requestUser);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

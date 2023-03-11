@@ -8,17 +8,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import com.cos.blog.model.Board;
 import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
+import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AdminApiService {
-	@Autowired
-	private UserRepository userRepository;
+
+	private final UserRepository userRepository;
+	private final BoardRepository boardRepository;
 
 	@Transactional(readOnly = true)
 	public Page<User> getList(Pageable pageable){
@@ -40,18 +45,28 @@ public class AdminApiService {
 	}
 
 	@Transactional
-	public void adminRoleApprove(int id)throws Exception{
+	public void updateAdminRole(int id, User requestUser)throws Exception{
+		log.info("@@@@@@@@@ requestUser :{}",requestUser);
 		User user = userRepository.findById(id).orElseThrow(()->{
 			return new IllegalArgumentException("해당 유저가 없습니다.");
 		});
-		if(user.getRole().equals(RoleType.ADMIN)){
-			throw new IllegalArgumentException("이미 관리자 입니다.");
-		}
-		user.setRole(RoleType.ADMIN);
+		user.setRole(requestUser.getRole());
 	}
 	@Transactional
 	public void adminRoleDelete(int id){
 		userRepository.deleteById(id);
+	}
+
+	@Transactional
+	public Page<Board> getBoardList(Pageable pageable, int id){
+		return boardRepository.findAllByUserId(pageable,id);
+	}
+
+	public User getUser(int id){
+		User user = userRepository.findById(id).orElseThrow(()->{
+			return new IllegalArgumentException("해당 사용자가 없습니다.");
+		});
+		return user;
 	}
 
 }

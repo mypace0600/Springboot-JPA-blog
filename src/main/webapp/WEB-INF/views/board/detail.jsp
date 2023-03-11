@@ -22,7 +22,7 @@
         <hr />
         <div class="d-flex justify-content-end">
             <button class="btn btn-secondary m-1" onclick="history.back()">돌아가기</button>
-            <c:if test="${board.user.id == principal.user.id}">
+            <c:if test="${board.user.id == principal.user.id || principal.user.role == 'ADMIN'}">
                 <a href="/board/${board.id}/updateForm" class="btn btn-warning m-1">수정</a>
                 <button id="btn-delete" class="btn btn-danger m-1">삭제</button>
             </c:if>
@@ -48,7 +48,7 @@
                                 <div>${reply.content}</div>
                                 <div class="d-flex">
                                     <div class="font-italic">${reply.user.userName} &nbsp;</div>
-                                    <c:if test="${reply.user.id == principal.user.id}">
+                                    <c:if test="${reply.user.id == principal.user.id || principal.user.role == 'ADMIN'}">
                                         <button type="button" class="badge m-1 btn-edit-box-display" id="${reply.id}">수정</button>
                                         <button onclick="index.replyDelete(${board.id},${reply.id})" class="badge m-1">삭제</button>
                                     </c:if>

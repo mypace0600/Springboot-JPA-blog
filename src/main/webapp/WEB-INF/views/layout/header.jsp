@@ -52,7 +52,7 @@
                             <a class="nav-link" href="/logout">로그아웃</a>
                         </li>
                             <li>
-                                <a class="nav-link" href="/admin/users">관리자</a>
+                                <a class="nav-link" href="/admin/main">관리자</a>
                             </li>
                     </ul>
                 </c:otherwise>
