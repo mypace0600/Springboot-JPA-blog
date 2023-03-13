@@ -1,19 +1,25 @@
 package com.cos.blog.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 // ORM -> Java(다른언어) Object를 테이블로 매핑해주는 기술
 @Entity
@@ -46,4 +52,8 @@ public class User {
 	private Timestamp createDate; // 등록일
 
 	private String oauth; // kakao
+
+	@JsonIgnoreProperties({"user"})
+	@OneToMany(mappedBy = "user",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+	private List<Board> boards;
 }

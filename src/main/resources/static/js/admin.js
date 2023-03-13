@@ -11,16 +11,12 @@ let index = {
             this.deleteUser(e.target.id);
         });
     },
+
     requestAdminRole:function (){
-        let data = {
-            id : $("#id").val()
-        };
 
         $.ajax({
             type:"PUT",
             url:"/admin/role/request",
-            data:JSON.stringify(data),
-            contentType:"application/json; charset=utf-8",
             dataType:"json"
         }).done(function (resp){
             if(resp.status === 200 || resp.data === 1){

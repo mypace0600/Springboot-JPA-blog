@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import com.cos.blog.config.auth.PrincipalDetail;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
@@ -31,8 +32,8 @@ public class AdminApiService {
 	}
 
 	@Transactional
-	public void adminRoleRequest(User requestUser)throws Exception{
-		User user = userRepository.findById(requestUser.getId()).orElseThrow(()->{
+	public User adminRoleRequest(PrincipalDetail principal)throws Exception{
+		User user = userRepository.findById(principal.getUser().getId()).orElseThrow(()->{
 			return new IllegalArgumentException("해당 유저가 없습니다.");
 		});
 		if(user.getRole().equals(RoleType.ADMIN)){
@@ -42,6 +43,7 @@ public class AdminApiService {
 			throw new IllegalArgumentException("이미 요청했습니다.");
 		}
 		user.setRole(RoleType.REQUEST);
+		return user;
 	}
 
 	@Transactional
@@ -53,7 +55,7 @@ public class AdminApiService {
 		user.setRole(requestUser.getRole());
 	}
 	@Transactional
-	public void adminRoleDelete(int id){
+	public void deleteUser(int id){
 		userRepository.deleteById(id);
 	}
 
@@ -67,6 +69,10 @@ public class AdminApiService {
 			return new IllegalArgumentException("해당 사용자가 없습니다.");
 		});
 		return user;
+	}
+
+	public Page<Board> getFavoriteBoards(Pageable pageable){
+		return boardRepository.findAll(pageable);
 	}
 
 }
