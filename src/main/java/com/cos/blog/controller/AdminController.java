@@ -68,4 +68,15 @@ public class AdminController {
 		}
 		return "admin/userBoards";
 	}
+
+	@GetMapping("/admin/boards")
+	public String adminFavoriteBoards(Model model, @PageableDefault(size = 10, sort = "count", direction = Sort.Direction.DESC) Pageable pageable){
+		Page<Board> boardList = service.getFavoriteBoards(pageable);
+		if(!boardList.isEmpty()){
+			model.addAttribute("boards",boardList);
+		} else {
+			model.addAttribute("boards",null);
+		}
+		return "admin/adminBoards";
+	}
 }
