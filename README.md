@@ -71,8 +71,5 @@ url :
  - Redis를 통한 조회수 중복 차단 :
  
    https://ssoco.tistory.com/19
-   
- - 개발자도구 콘솔을 통한 글 삭제 시도 차단 :
- 
-   https://developyo.tistory.com/88
+
   
