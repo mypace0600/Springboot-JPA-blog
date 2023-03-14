@@ -54,6 +54,10 @@ public class UserApiService {
 			return new User();
 		});
 	}
+
+	public void deleteUser(int id){
+		userRepository.deleteById(id);
+	}
 }
 
 

@@ -12,6 +12,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,6 +65,17 @@ public class UserApiController {
 		);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
+
+	@DeleteMapping("/user/{id}")
+	public ResponseDto<Integer> deleteUser(@PathVariable int id) throws Exception{
+		try {
+			service.deleteUser(id);
+		} catch (Exception e){;
+			throw new IllegalArgumentException("회원탈퇴 실패");
+		}
+		SecurityContextHolder.clearContext();
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
 
