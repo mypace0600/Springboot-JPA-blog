@@ -6,6 +6,9 @@ let index = {
         $("#btn-update").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
             this.update();
         });
+        $("#btn-user-delete").on("click",()=>{
+            this.deleteUser();
+        })
 
         // 전통적 방식의 로그인 구현
         /*$("#btn-login").on("click",()=>{  // function(){} 이 아니라 ()=>{}를 쓰는 이유는 this를 바인딩하기 위해서
@@ -95,6 +98,27 @@ let index = {
             }).fail(function (error){
                 alert(JSON.stringify(error));
             });
+    },
+
+    deleteUser:function (){
+
+        let id = $("#id").val();
+        console.log("@@@@@@@ id :"+id);
+
+        $.ajax({
+            type:"DELETE",
+            url:"/user/"+id,
+            dataType:"json"
+        }).done(function (resp){
+            if(resp.status === 200 || resp.data === 1){
+                alert("탈퇴 완료");
+            } else {
+                alert("탈퇴 실패");
+            }
+            location.href="/";
+        }).fail(function (error){
+            alert(JSON.stringify(error));
+        });
     }
 }
 
